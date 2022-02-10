@@ -7,6 +7,8 @@ public class Board {
 	private int height;
 	
 	private Square[][] squares;
+	
+	private int playedSquares;
 
 	public Board(int width, int height) {
 		this.width = width;
@@ -16,13 +18,14 @@ public class Board {
 	}
 	
 	private void initializeSquareStatus() {
+		playedSquares = 0; 
 		squares = new Square[width][height];
 		for(int y = 0; y < height; y++)
 			for(int x = 0; x < width; x++)
 				squares[x][y] = new Square(0, SquareStatus.ACTIVE);
 	}
 	
-	public void changeSquareStatus(BoardPoint point, boolean mark) {
+	public SquareStatus changeSquareStatus(BoardPoint point, boolean mark) {
 		Square square = squares[point.getX()][point.getY()];
 		
 		if(mark) markSquare(square);
@@ -30,9 +33,12 @@ public class Board {
 		if(!mark && square.getSquareStatus() == SquareStatus.ACTIVE) {
 			if(square.getNumber() == 0) {
 				changeZeroSquare(point);
+			} else {
+				square.setSquareStatus(SquareStatus.PLAYED);
+				playedSquares = getPlayedSquares() + 1;
 			}
-			square.setSquareStatus(SquareStatus.PLAYED);
 		}
+		return square.getSquareStatus();
 	}
 	
 	private void markSquare(Square square) {
@@ -48,6 +54,7 @@ public class Board {
 
 		if(centralSquare.getSquareStatus() == SquareStatus.ACTIVE) {
 			centralSquare.setSquareStatus(SquareStatus.PLAYED);
+			playedSquares = getPlayedSquares() + 1;
 			
 			if(centralSquare.getNumber() == 0) {
 				iterateAdjacentSquares(point, a -> { changeZeroSquare(a); });
@@ -143,9 +150,16 @@ public class Board {
 				
 				str.append("\t" );
 			}
+			str.append(":");
+			str.append(y);
+
 			str.append("\n");
 		}
 		str.append("\n");
 		return str.toString();
+	}
+
+	public int getPlayedSquares() {
+		return playedSquares;
 	}
 }

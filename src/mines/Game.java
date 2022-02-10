@@ -6,29 +6,37 @@ import java.util.Set;
 
 
 public class Game {
-	private int width = 7;
-	private int height = 7;
-	private int mines = 10;
+	private int width;
+	private int height;
+	private int mines;
+	
+	private int safeSquaresCount;
 	
 	private Board board;
 	
 	private Set<BoardPoint> minesCoord;
+	private GameStatus status;
 	
 	public Game(int width, int height, int mines) {
 		this.width = width;
 		this.height = height;
 		this.mines = mines;
 		
+		this.safeSquaresCount = width * height - mines;
+		
 		minesCoord = new HashSet<>();
-
+		
+		status = GameStatus.NOT_PLAYING;
+		
 		board = new Board(width, height);
 	}
 	
-	public void initialize() {
-		putMines();
+	private void start(BoardPoint initialPoint) {
+		putMines(initialPoint);
+		status = GameStatus.PLAYING;
 	}
 	
-	private void putMines() {
+	private void putMines(BoardPoint initialPoint) {
 		Random rnd = new Random();
 		
 		int k = 0;
@@ -36,7 +44,7 @@ public class Game {
 		do { 
 			BoardPoint point = new BoardPoint(rnd.nextInt(width), rnd.nextInt(height));
 			
-			if(minesCoord.add(point)) {
+			if(!point.equals(initialPoint) && minesCoord.add(point)) {
 				board.addMine(point);
 				k++;
 			}
@@ -47,7 +55,29 @@ public class Game {
 		return board.toString();
 	}
 	
-	public void changeSquareStatus(BoardPoint point, boolean mark) {
-		board.changeSquareStatus(point, mark);
+	public boolean changeSquareStatus(BoardPoint point, boolean mark) {
+		boolean result = false;
+		if(status == GameStatus.NOT_PLAYING && !mark) {
+			start(point);
+		}
+		if(status == GameStatus.PLAYING) {
+			SquareStatus squareStatus = board.changeSquareStatus(point, mark);
+			if(!mark && squareStatus != SquareStatus.MARKED)
+				changeStatus(point);
+			result = true;
+		}
+		return result;
+	}
+	
+	private void changeStatus(BoardPoint point) {
+		if(minesCoord.contains(point)) {
+			status = GameStatus.LOST;
+		} else if(board.getPlayedSquares() == safeSquaresCount) {
+			status = GameStatus.WIN;
+		}
+	}
+
+	public GameStatus getStatus() {
+		return status;
 	}
 }
