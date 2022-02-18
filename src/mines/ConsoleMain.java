@@ -5,14 +5,79 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ConsoleMain {
-
-	public static void main(String[] args) {
-		Game game = new Game(10, 10, 10);
+	private int rowCount = 8;
+	private int colCount = 8;
+	private int mines = 10;
+	
+	private String[][] squareStrings;
+	private Game game;
+	
+	public ConsoleMain() {
+		squareStrings = new String[rowCount][colCount];
 		
-		System.out.println(game.toString());
+		for(int x = 0; x < rowCount; x++)
+			for(int y = 0; y < colCount; y++)
+				squareStrings[x][y] = "_";
+		
+		Board board = new Board(rowCount, colCount);
+		
+		board.registerObserver(new SquareObserver() {
+			@Override
+			public void squareChanged(SquareStatusChangedArgs args) {
+				Square square = args.getSquare();
+				
+				String data = "";
+				
+				if(square.getSquareStatus() == SquareStatus.PLAYED) {
+					if(square.getNumber() == Square.MINE) data = "X";
+					else if (square.getNumber() == 0) data = " ";
+					else data = Integer.toString(square.getNumber());
+				}
+				else if(square.getSquareStatus() == SquareStatus.MARKED)
+					data = "*";
+				
+				squareStrings[args.getPoint().getX()][args.getPoint().getY()] = data;
+						
+			}
+		});
+		
+		game = new Game(board, mines);
+	}
+	
+	public static void printBoard(String[][] squareStrings) {
+		StringBuilder str = new StringBuilder();
+		
+		str.append("\t");
+		
+		for(int i = 0; i < squareStrings.length; i++) {
+			str.append(i);
+			str.append("\t");	
+		}
+		str.append("\n\n");
+		
+		for(int col = 0; col < squareStrings[0].length; col++) {
+			str.append(col);
+			str.append(":\t");
+			for(int row = 0; row < squareStrings.length; row++) {
+				str.append(squareStrings[row][col]);
+				str.append("\t" );
+			}
+			str.append(":");
+			str.append(col);
 
+			str.append("\n");
+		}
+		str.append("\n");
+		
+		System.out.println(str.toString());
+	}
+	
+	public void play() {
 		int x, y;
+		
 		Scanner in = new Scanner(System.in);
+		
+		printBoard(this.squareStrings);
 
 		do {
 			System.out.print("Enter x.y.[+]: ");
@@ -38,8 +103,9 @@ public class ConsoleMain {
 				game.changeSquareStatus(new BoardPoint(x,y), mark);
 			
 			for(int k = 0; k<20;k++) System.out.println("");
-			System.out.println(game.toString());
-
+			
+			printBoard(this.squareStrings);
+			
 			if(game.getStatus() == GameStatus.LOST) {
 				System.out.println("YOU LOST :'(");
 				break;
@@ -50,7 +116,13 @@ public class ConsoleMain {
 
 		} while(true);
 		
-		in.close();
+		in.close();		
+	}
+	
+	public static void main(String[] args) {
+		ConsoleMain b = new ConsoleMain();
+		
+		b.play();
 	}
 
 }

@@ -1,0 +1,37 @@
+.n1 {
+    -fx-text-fill: blue;
+}
+
+.n2 {
+    -fx-text-fill: green;
+}
+
+.n3 {
+    -fx-text-fill: red;
+}
+
+.n4 {
+    -fx-text-fill: darkblue;
+}
+
+
+.n5 {
+    -fx-text-fill: purple;
+}
+
+.n6 {
+    -fx-text-fill: lightgreen;
+}
+
+.n7 {
+    -fx-text-fill: black;
+}
+
+.n8 {
+    -fx-text-fill: pink;
+}
+
+.n1, .n2, .n3, .n4, .n5, .n6, .n7, .n8 {
+	-fx-font-weight: bold;
+	-fx-font-size: 18;
+}

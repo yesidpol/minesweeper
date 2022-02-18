@@ -6,8 +6,8 @@ import java.util.Set;
 
 
 public class Game {
-	private int width;
-	private int height;
+	private int rowCount;
+	private int colCount;
 	private int mines;
 	
 	private int safeSquaresCount;
@@ -17,18 +17,21 @@ public class Game {
 	private Set<BoardPoint> minesCoord;
 	private GameStatus status;
 	
-	public Game(int width, int height, int mines) {
-		this.width = width;
-		this.height = height;
+	public Game(Board board, int mines) { // int rowCount, int colCount, int mines) {
+		this.rowCount = board.getRowCount();
+		this.colCount = board.getColCount();
+
 		this.mines = mines;
 		
-		this.safeSquaresCount = width * height - mines;
+		// TODO Throw exception
+		this.safeSquaresCount = rowCount * colCount - mines;
 		
 		minesCoord = new HashSet<>();
 		
 		status = GameStatus.NOT_PLAYING;
 		
-		board = new Board(width, height);
+		this.board = board;
+	
 	}
 	
 	private void start(BoardPoint initialPoint) {
@@ -42,7 +45,7 @@ public class Game {
 		int k = 0;
 		
 		do { 
-			BoardPoint point = new BoardPoint(rnd.nextInt(width), rnd.nextInt(height));
+			BoardPoint point = new BoardPoint(rnd.nextInt(rowCount), rnd.nextInt(colCount));
 			
 			if(!point.equals(initialPoint) && minesCoord.add(point)) {
 				board.addMine(point);

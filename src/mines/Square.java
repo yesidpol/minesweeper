@@ -1,7 +1,7 @@
 package mines;
 
 public class Square {
-	final static int MINE = -1; 
+	public final static int MINE = -1; 
 	private int number;
 	private SquareStatus squareStatus;
 	
@@ -20,6 +20,7 @@ public class Square {
 	}
 
 	public void setNumber(int number) {
+		// TODO [0, 8] validation
 		this.number = number;
 	}
 
@@ -36,4 +37,5 @@ public class Square {
 			number++;
 		}
 	}
+
 }

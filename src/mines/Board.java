@@ -1,51 +1,68 @@
 package mines;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class Board {
-	private int width;
-	private int height;
+	private int rowCount;
+	private int colCount;
 	
 	private Square[][] squares;
 	
 	private int playedSquares;
+	
+	private List<SquareObserver> squareObservers;
 
-	public Board(int width, int height) {
-		this.width = width;
-		this.height = height;
+	public Board(int rowCount, int colCount) {
+		this.rowCount = rowCount;
+		this.colCount = colCount;
 
 		initializeSquareStatus();
+		squareObservers = new ArrayList<>();
+	}
+	
+	public void registerObserver(SquareObserver observer) {
+		squareObservers.add(observer);
+	}
+	
+	public void removeObserver(SquareObserver observer) {
+		squareObservers.remove(observer);
+	}
+
+	private void notifyObservers(Square square, SquareStatus previousStatus, BoardPoint point) {
+		squareObservers.forEach(a -> a.squareChanged(new SquareStatusChangedArgs(square, previousStatus, point)));
 	}
 	
 	private void initializeSquareStatus() {
 		playedSquares = 0; 
-		squares = new Square[width][height];
-		for(int y = 0; y < height; y++)
-			for(int x = 0; x < width; x++)
+		squares = new Square[rowCount][colCount];
+		for(int x = 0; x < rowCount; x++)
+			for(int y = 0; y < colCount; y++)
 				squares[x][y] = new Square(0, SquareStatus.ACTIVE);
 	}
 	
 	public SquareStatus changeSquareStatus(BoardPoint point, boolean mark) {
 		Square square = squares[point.getX()][point.getY()];
 		
-		if(mark) markSquare(square);
+		if(mark) markSquare(square, point);
 
 		if(!mark && square.getSquareStatus() == SquareStatus.ACTIVE) {
 			if(square.getNumber() == 0) {
 				changeZeroSquare(point);
 			} else {
-				square.setSquareStatus(SquareStatus.PLAYED);
+				changeSquareStatusAndNotify(square, point, SquareStatus.PLAYED);
 				playedSquares = getPlayedSquares() + 1;
 			}
 		}
 		return square.getSquareStatus();
 	}
 	
-	private void markSquare(Square square) {
+	private void markSquare(Square square, BoardPoint point) {
 		if(square.getSquareStatus() == SquareStatus.ACTIVE) {
-			square.setSquareStatus(SquareStatus.MARKED);
+			changeSquareStatusAndNotify(square, point, SquareStatus.MARKED);
 		} else if(square.getSquareStatus() == SquareStatus.MARKED) {
-			square.setSquareStatus(SquareStatus.ACTIVE);
+			changeSquareStatusAndNotify(square, point, SquareStatus.ACTIVE);
 		}
 	}
 	
@@ -53,13 +70,21 @@ public class Board {
 		Square centralSquare = squares[point.getX()][point.getY()]; 
 
 		if(centralSquare.getSquareStatus() == SquareStatus.ACTIVE) {
-			centralSquare.setSquareStatus(SquareStatus.PLAYED);
+			changeSquareStatusAndNotify(centralSquare, point, SquareStatus.PLAYED);
+			
 			playedSquares = getPlayedSquares() + 1;
 			
 			if(centralSquare.getNumber() == 0) {
 				iterateAdjacentSquares(point, a -> { changeZeroSquare(a); });
 			}
 		}
+	}
+	
+	private void changeSquareStatusAndNotify(Square square, BoardPoint point,SquareStatus newStatus) {
+		SquareStatus previous = square.getSquareStatus();
+		square.setSquareStatus(newStatus);
+		
+		notifyObservers(square, previous, point);
 	}
 	
 	public void addMine(BoardPoint point) {
@@ -116,7 +141,7 @@ public class Board {
 	}
 	
 	private boolean isValidSquare(BoardPoint point) {
-		return point.getX() >= 0 && point.getX() < width && point.getY() >= 0 && point.getY() < height;
+		return point.getX() >= 0 && point.getX() < rowCount && point.getY() >= 0 && point.getY() < colCount;
 	}
 	
 	public String toString() {
@@ -124,25 +149,25 @@ public class Board {
 		
 		str.append("\t");
 		
-		for(int i = 0; i < width; i++) {
+		for(int i = 0; i < rowCount; i++) {
 			str.append(i);
 			str.append("\t");	
 		}
 		str.append("\n\n");
 		
-		for(int y = 0; y < height; y++) {
-			str.append(y);
+		for(int col = 0; col < colCount; col++) {
+			str.append(col);
 			str.append(":\t");
-			for(int x = 0; x < width; x++) {
+			for(int row = 0; row < rowCount; row++) {
 				String data;
 				
-				if(squares[x][y].getSquareStatus() == SquareStatus.PLAYED) {
-					if(squares[x][y].getNumber() == Square.MINE) data = "X";
-					else if (squares[x][y].getNumber() == 0) data = " ";
-					else data = Integer.toString(squares[x][y].getNumber());
+				if(squares[row][col].getSquareStatus() == SquareStatus.PLAYED) {
+					if(squares[row][col].getNumber() == Square.MINE) data = "X";
+					else if (squares[row][col].getNumber() == 0) data = " ";
+					else data = Integer.toString(squares[row][col].getNumber());
 					str.append(data);
 				}
-				else if(squares[x][y].getSquareStatus() == SquareStatus.MARKED)
+				else if(squares[row][col].getSquareStatus() == SquareStatus.MARKED)
 					str.append("*");
 				else
 					str.append("_");
@@ -151,15 +176,24 @@ public class Board {
 				str.append("\t" );
 			}
 			str.append(":");
-			str.append(y);
+			str.append(col);
 
 			str.append("\n");
 		}
 		str.append("\n");
 		return str.toString();
 	}
-
+	
+	// getters and setters
 	public int getPlayedSquares() {
 		return playedSquares;
+	}
+
+	public int getRowCount() {
+		return rowCount;
+	}
+
+	public int getColCount() {
+		return colCount;
 	}
 }
