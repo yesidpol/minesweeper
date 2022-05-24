@@ -1,7 +1,9 @@
 plugins {
     id 'java'
-    id 'org.openjfx.javafxplugin' version '0.0.8'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
 }
+
+def distDir = "$buildDir/dist"
 
 repositories {
     mavenCentral()
@@ -12,12 +14,30 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.fxml']
 }
 
-
-
 sourceSets {
     main {
         java {
             srcDirs = ['src', 'src_gui']
         }
+    }
+}
+
+task mainJar(type: Jar) {
+    baseName = 'mines'
+    from sourceSets.main.output
+    manifest {
+    attributes(
+        "Main-Class": "mines.gui.Main",
+        "Class-Path": configurations.runtimeClasspath.collect { 'mines_lib/'+it.getName() }.join(' '))
+    }
+}
+
+task binDist(dependsOn: mainJar, type: Copy){
+    into "$distDir"
+    // jar
+    from("$buildDir/libs/mines.jar")
+    //libs
+    from(configurations.compileClasspath){
+        into 'mines_lib'
     }
 }
