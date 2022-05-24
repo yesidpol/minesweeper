@@ -4,10 +4,10 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+import enums.GameStatus;
+
 
 public class Game {
-	private int rowCount;
-	private int colCount;
 	private int mines;
 	
 	private int safeSquaresCount;
@@ -17,21 +17,15 @@ public class Game {
 	private Set<BoardPoint> minesCoord;
 	private GameStatus status;
 	
-	public Game(Board board, int mines) { // int rowCount, int colCount, int mines) {
-		this.rowCount = board.getRowCount();
-		this.colCount = board.getColCount();
-
+	public Game(Board board, int mines) {
 		this.mines = mines;
-		
+		this.board = board;
 		// TODO Throw exception
-		this.safeSquaresCount = rowCount * colCount - mines;
+		this.safeSquaresCount = getRowCount() * getColCount() - mines;
 		
 		minesCoord = new HashSet<>();
 		
 		status = GameStatus.NOT_PLAYING;
-		
-		this.board = board;
-	
 	}
 	
 	private void start(BoardPoint initialPoint) {
@@ -45,7 +39,7 @@ public class Game {
 		int k = 0;
 		
 		do { 
-			BoardPoint point = new BoardPoint(rnd.nextInt(rowCount), rnd.nextInt(colCount));
+			BoardPoint point = new BoardPoint(rnd.nextInt(getRowCount()), rnd.nextInt(getColCount()));
 			
 			if(!point.equals(initialPoint) && minesCoord.add(point)) {
 				board.addMine(point);
@@ -82,5 +76,17 @@ public class Game {
 
 	public GameStatus getStatus() {
 		return status;
+	}
+
+	public int getRowCount() {
+		return board.getRowCount();
+	}
+
+	public int getColCount() {
+		return board.getColCount();
+	}
+
+	public Board getBoard() {
+		return board;
 	}
 }

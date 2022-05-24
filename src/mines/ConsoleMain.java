@@ -4,6 +4,8 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import enums.GameStatus;
+
 public class ConsoleMain {
 	private int rowCount = 8;
 	private int colCount = 8;
@@ -34,7 +36,7 @@ public class ConsoleMain {
 					else data = Integer.toString(square.getNumber());
 				}
 				else if(square.getSquareStatus() == SquareStatus.MARKED)
-					data = "*";
+					data = "?";
 				
 				squareStrings[args.getPoint().getX()][args.getPoint().getY()] = data;
 						
@@ -102,7 +104,8 @@ public class ConsoleMain {
 			if(x >= 0 && y >= 0)
 				game.changeSquareStatus(new BoardPoint(x,y), mark);
 			
-			for(int k = 0; k<20;k++) System.out.println("");
+			System.out.print("\033[H\033[2J");  
+			System.out.flush();
 			
 			printBoard(this.squareStrings);
 			
