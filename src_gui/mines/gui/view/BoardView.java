@@ -1,8 +1,7 @@
-package gui.view;
+package mines.gui.view;
 
 import java.util.function.BiConsumer;
 
-import gui.controller.MineController;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
@@ -13,6 +12,7 @@ import mines.BoardPoint;
 import mines.Square;
 import mines.SquareObserver;
 import mines.SquareStatusChangedArgs;
+import mines.gui.controller.MineController;
 
 public class BoardView  implements SquareObserver{
 

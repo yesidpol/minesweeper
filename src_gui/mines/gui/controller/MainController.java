@@ -1,18 +1,18 @@
-package gui.controller;
+package mines.gui.controller;
 
-import command.Command;
-import enums.Actions;
-import enums.DifficultyLevel;
-import enums.GameStatus;
-import factory.GameFactory;
-import gui.view.BoardView;
-import gui.view.Dialogs;
-import gui.view.MainView;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import mines.BoardPoint;
 import mines.Game;
+import mines.enums.DifficultyLevel;
+import mines.enums.GameStatus;
+import mines.factory.GameFactory;
+import mines.gui.command.Command;
+import mines.gui.enums.Actions;
+import mines.gui.view.BoardView;
+import mines.gui.view.Dialogs;
+import mines.gui.view.MainView;
 
 public class MainController implements MineController {
     private Stage primaryStage;
@@ -78,7 +78,7 @@ public class MainController implements MineController {
     
     private void initializeScene() {
         Scene scene = new Scene((Parent)this.getView());
-        scene.getStylesheets().add("/resources/style.css");
+        scene.getStylesheets().add("/mines/gui/resources/style.css");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         

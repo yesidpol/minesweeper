@@ -1,8 +1,8 @@
-package factory;
+package mines.factory;
 
-import enums.DifficultyLevel;
 import mines.Board;
 import mines.Game;
+import mines.enums.DifficultyLevel;
 
 public class GameFactory {
     public static Game createBoard(DifficultyLevel level) {

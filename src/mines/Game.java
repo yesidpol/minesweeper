@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import enums.GameStatus;
+import mines.enums.GameStatus;
 
 
 public class Game {

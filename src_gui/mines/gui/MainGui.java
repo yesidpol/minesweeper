@@ -1,8 +1,8 @@
-package gui;
+package mines.gui;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import gui.controller.MainController;
+import mines.gui.controller.MainController;
 
 
 public class MainGui extends Application {

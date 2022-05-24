@@ -4,7 +4,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import enums.GameStatus;
+import mines.enums.GameStatus;
 
 public class ConsoleMain {
     private int rowCount = 8;

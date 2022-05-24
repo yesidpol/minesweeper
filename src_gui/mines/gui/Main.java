@@ -1,4 +1,4 @@
-package gui;
+package mines.gui;
 
 public class Main {
 

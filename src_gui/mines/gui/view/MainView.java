@@ -1,9 +1,8 @@
-package gui.view;
+package mines.gui.view;
 
 import java.util.HashMap;
 import java.util.Map;
-import command.Command;
-import enums.Actions;
+
 import javafx.collections.ObservableList;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -12,6 +11,8 @@ import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import mines.gui.command.Command;
+import mines.gui.enums.Actions;
 
 public class MainView {
     private VBox pane;

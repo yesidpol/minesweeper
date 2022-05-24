@@ -1,4 +1,4 @@
-package gui.view;
+package mines.gui.view;
 
 import javafx.scene.control.Alert;
 

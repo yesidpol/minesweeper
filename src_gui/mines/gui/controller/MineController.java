@@ -1,4 +1,4 @@
-package gui.controller;
+package mines.gui.controller;
 
 import mines.BoardPoint;
 
