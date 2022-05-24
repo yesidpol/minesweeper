@@ -1,7 +1,5 @@
 package enums;
 
 public enum DifficultyLevel {
-	BEGINNER,
-	INTERMEDIATE,
-	EXPERT
+    BEGINNER, INTERMEDIATE, EXPERT
 }

@@ -1,8 +1,8 @@
 package enums;
 
 public enum Actions {
-	NEW_GAME,
-	BEGINNER,
-	INTERMEDIATE,
-	EXPERT
+    NEW_GAME,
+    BEGINNER,
+    INTERMEDIATE,
+    EXPERT
 }

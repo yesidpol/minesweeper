@@ -7,14 +7,14 @@ import gui.controller.MainController;
 
 public class MainGui extends Application {
 
-	public static void mainGui(String[] args) {
-		launch();
-	}
+    public static void mainGui(String[] args) {
+        launch();
+    }
 
-	@Override
-	public void start(Stage primaryStage) throws Exception {	
-		MainController controller = new MainController(primaryStage);
+    @Override
+    public void start(Stage primaryStage) throws Exception {    
+        MainController controller = new MainController(primaryStage);
 
-		controller.initialize();
-	}
+        controller.initialize();
+    }
 }
